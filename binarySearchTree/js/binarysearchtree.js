@@ -32,11 +32,19 @@ var BinarySearchTree = function(){
     function minSort( node, buffer ){
         if( node.left !== null ){
             minSort( node.left, buffer );
-            buffer.push( node.left.value );
         }
+        buffer.push( node.value );
         if( node.right !== null ){
             minSort( node.right, buffer)
-            buffer.push( node.right.value );
+        }
+    };
+    function maxSort( node, buffer ){
+        if( node.right !== null ){
+            maxSort( node.right, buffer)
+        }
+        buffer.push( node.value );
+        if( node.left !== null ){
+            maxSort( node.left, buffer );
         }
     };
 
@@ -65,11 +73,19 @@ var BinarySearchTree = function(){
                 buffer = [];
             minSort(root,buffer);
             return buffer;
+        },
+        testMaxSort:function(){
+            var root = unitTest.testInsert([35,98,9,54,8,22,67,52,97,20]),
+                buffer = [];
+            maxSort(root,buffer);
+            return buffer;
         }
     }
     return {
         Node:Node,
         insert:insert,
+        minSort:minSort,
+        maxSort:maxSort,
         randRange:randRange,
         unitTest:unitTest
     };
