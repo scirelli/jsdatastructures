@@ -14,47 +14,92 @@ var  AVLTree = function(){
         this.left   = null;
         this.right  = null;
         this.height = 0;
-        this.weight = 0;
         this.value  = value;
     };
     
     //1. Simple BST insert
     //2. Fix AVL property from changed node up.
-    // 
+    //   - suppose x is the lowest node that is violating AVL.
+    //   - Assume x.right higher (heavier)
+    //     - if x's right child (y) is right heavy or balanced
+    //     (x)            LR(x)               (y)     
+    //    /   \                              /    \   
+    // /A\     (y)                         (x)     /C\
+    //        /    \                      /   \       
+    //      /B\    /C\                   /A\  /B\     
+    //     - else if x's right child (y) is left heavy
+    //            (x)            RR(y)           (z)
+    //           /   \           LR(x)          /   \
+    //        /A\     (y)                     (x)    (y)
+    //               /    \                  /   \   /  \
+    //             (z)    /D\              /A\  /B\ /C\ /D\
+    //            /   \
+    //           /B\  /C\
     function insert( node, value ){
+        var newChild = null;
         if( value <= node.value ){
             if( !node.left ){
                 node.left = new Node(value);
+                node = balance(node);
+                node.height = nodeHeight(node);
             }else{
                 insert( node.left, value );
+                node = balance(node);
                 node.height = nodeHeight(node);
-                node.weight = nodeWieght(node);
             }
         }else if( value >= node.value ){
             if( !node.right ){
                 node.right = new Node(value);
+                node = balance(node);
+                node.height = nodeHeight(node);
             }else{
                 insert(node.right, value);
+                node = balance(node);
                 node.height = nodeHeight(node);
-                node.weight = nodeWieght(node);
             }
         }
     };
+    function balance( node ){
+        var weight = 0;
+        weight = nodeWieght(node);
+        if( Math.abs(weight) > 1 ){//unblanced
+            if( weight > 1 ){//node is left heavy
+                weight = nodeWieght(node.left);
+                if( weight >= 1 || weight === 0 ){//node's left child is left heavy or balanced
+                    return rightRotate(node);
+                }else if( weight < 0 ){//node's left child is right heavy
+                    leftRotate( node.left );
+                    return rightRotate( node  );
+                }
+            }else if( weight < 0 ){//node is right heavy
+                weight = nodeWieght(node.right);
+                if( weight >= 1 || weight === 0 ){//node's left child is left heavy or balanced
+                    leftRotate( node.left );
+                    return rightRotate( node  );
+                }else if( weight < 0 ){//node's left child is right heavy
+                    return rightRotate(node);
+                }
+            }
+        }
+        return node;
+    };
+
     function nodeHeight( node ){
         var leftH  = node.left  ? node.left.height  : -1,
             rightH = node.right ? node.right.height : -1;
         return Math.max( leftH, rightH ) + 1;
     };
+
     function nodeWieght( node ){
         var leftH  = node.left  ? node.left.height  : -1,
             rightH = node.right ? node.right.height : -1;
-        return Math.abs( leftH - rightH );
+        return leftH - rightH;
     }
     // You do a left rotate when the node is 'heavy' on the right
     //
     //          (x)           Left Rotate x        (y)        
     //         /   \                              /    \     
-    //      /A\     (y)                         (x)     /C\
+    //      /A\     (y)                         (x)     /C\ 
     //             /    \                      /   \        
     //           /B\    /C\                   /A\  /B\       
     //      AxByC                =          AxByC
@@ -64,6 +109,7 @@ var  AVLTree = function(){
             nodeY = nodeX.right;
         nodeX.right = nodeY.left;
         nodeY.left = nodeX;
+        nodeX.height--;
         return nodeY;
     };
     // You do a right rotate when the node is 'heavy' on the left
@@ -80,6 +126,7 @@ var  AVLTree = function(){
             nodeY = nodeX.left;
         nodeX.left = nodeY.right;
         nodeY.right = nodeX;
+        nodeX.height--;
         return nodeY;
     }
 
@@ -95,7 +142,12 @@ var  AVLTree = function(){
     };
     
     var unitTest = {
-        testInsert:function( array ){
+        testAVLInsert:function( array ){
+            var root = new Node(array[0]);
+            for( var i=1,l=array.length; i<l; i++ ){
+                insert( root, array[i] );
+            }
+            return root;
         }
     }
     return {
