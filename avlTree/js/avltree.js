@@ -10,7 +10,6 @@
 //  Nh = 1 + Nh-1 + Nh-2
 var  AVLTree = function(){
     function Node( value ){
-        this.parent = null;
         this.left   = null;
         this.right  = null;
         this.height = 0;
@@ -137,6 +136,28 @@ var  AVLTree = function(){
         return nodeY;
     }
 
+    function minSort( node, buffer ){
+        if( node.left !== null ){
+            minSort( node.left, buffer );
+        }
+        buffer.push( node.value );
+        if( node.right !== null ){
+            minSort( node.right, buffer)
+        }
+        return buffer;
+    };
+
+    function maxSort( node, buffer ){
+        if( node.right !== null ){
+            maxSort( node.right, buffer)
+        }
+        buffer.push( node.value );
+        if( node.left !== null ){
+            maxSort( node.left, buffer );
+        }
+        return buffer;
+    };
+
     // [35,98,9,54,8,22,67,52,97,20]
     //            35 
     //        9           98
@@ -147,6 +168,11 @@ var  AVLTree = function(){
     function randRange( min, max ){
         return ~~(Math.random()*max + min);
     };
+    function randFill( array, min, max ){
+        min = min || 0;
+        max = max || array.length;
+        for( var i=0,l=array.length; i<l; array[i++] = randRange(min,max) );
+    };
     
     var unitTest = {
         testAVLInsert:function( array ){
@@ -156,12 +182,15 @@ var  AVLTree = function(){
                 if( t ) root = t;
             }
             return root;
-        }
+        },
+        randFill:randFill
     }
     return {
         Node:Node,
         insert:insert,
         randRange:randRange,
+        minSort:minSort,
+        maxSort:maxSort,
         unitTest:unitTest
     };
 }();
