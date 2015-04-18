@@ -47,7 +47,7 @@ var  AVLTree = function(){
                     node.left = newChild;
                 }
                 newChild = balance(node);
-                node.height = nodeHeight(node);
+                node.height = nodeHeight(node)//don't think i need this anymore;
             }
         }else if( value >= node.value ){
             if( !node.right ){
@@ -59,7 +59,7 @@ var  AVLTree = function(){
                     node.right = newChild;
                 }
                 newChild = balance(node);
-                node.height = nodeHeight(node);
+                node.height = nodeHeight(node); //don't think i need this anymore
             }
         }
         return newChild;
@@ -73,16 +73,16 @@ var  AVLTree = function(){
                 if( weight >= 1 || weight === 0 ){//node's left child is left heavy or balanced
                     return rightRotate(node);
                 }else if( weight < 0 ){//node's left child is right heavy
-                    leftRotate( node.left );
+                    node.left = leftRotate( node.left );
                     return rightRotate( node  );
                 }
             }else if( weight < 0 ){//node is right heavy
                 weight = nodeWieght(node.right);
                 if( weight >= 1 || weight === 0 ){//node's right child is left heavy or balanced
-                     rightRotate( node.right );
+                     node.right = rightRotate( node.right );
                     return leftRotate( node  );
-                }else if( weight < 0 ){//node's left child is right heavy
-                    return rightRotate(node.left);
+                }else if( weight < 0 ){//node's right child is right heavy
+                    return leftRotate(node);
                 }
             }
         }
@@ -151,8 +151,9 @@ var  AVLTree = function(){
     var unitTest = {
         testAVLInsert:function( array ){
             var root = new Node(array[0]);
-            for( var i=1,l=array.length; i<l; i++ ){
-                insert( root, array[i] );
+            for( var i=1,t,l=array.length; i<l; i++ ){
+                t = insert( root, array[i] );
+                if( t ) root = t;
             }
             return root;
         }
