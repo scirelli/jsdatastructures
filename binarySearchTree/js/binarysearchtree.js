@@ -69,7 +69,7 @@ var BinarySearchTree = function(){
             }
         },
         testMinSort:function(){
-            var root = unitTest.testInsert([35,98,9,54,8,22,67,52,97,20]),
+            var root = unitTest.testInsert([15,3,7,1,7,0,8,5,44,16,34,67,23]),
                 buffer = [];
             minSort(root,buffer);
             return buffer;
