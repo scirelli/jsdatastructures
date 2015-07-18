@@ -10,7 +10,6 @@
 //  Nh = 1 + Nh-1 + Nh-2
 var  AVLTree = function(){
     function Node( value ){
-        this.parent = null;
         this.left   = null;
         this.right  = null;
         this.height = 0;
@@ -40,24 +39,29 @@ var  AVLTree = function(){
         if( value <= node.value ){
             if( !node.left ){
                 node.left = new Node(value);
-                node = balance(node);
                 node.height = nodeHeight(node);
             }else{
-                insert( node.left, value );
-                node = balance(node);
-                node.height = nodeHeight(node);
+                newChild = insert( node.left, value );
+                if( newChild ){
+                    node.left = newChild;
+                }
+                newChild = balance(node);
+                node.height = nodeHeight(node)//don't think i need this anymore;
             }
         }else if( value >= node.value ){
             if( !node.right ){
                 node.right = new Node(value);
-                node = balance(node);
                 node.height = nodeHeight(node);
             }else{
-                insert(node.right, value);
-                node = balance(node);
-                node.height = nodeHeight(node);
+                newChild = insert(node.right, value);
+                if( newChild ){
+                    node.right = newChild;
+                }
+                newChild = balance(node);
+                node.height = nodeHeight(node); //don't think i need this anymore
             }
         }
+        return newChild;
     };
     function balance( node ){
         var weight = 0;
@@ -68,20 +72,20 @@ var  AVLTree = function(){
                 if( weight >= 1 || weight === 0 ){//node's left child is left heavy or balanced
                     return rightRotate(node);
                 }else if( weight < 0 ){//node's left child is right heavy
-                    leftRotate( node.left );
+                    node.left = leftRotate( node.left );
                     return rightRotate( node  );
                 }
             }else if( weight < 0 ){//node is right heavy
                 weight = nodeWieght(node.right);
-                if( weight >= 1 || weight === 0 ){//node's left child is left heavy or balanced
-                    leftRotate( node.left );
-                    return rightRotate( node  );
-                }else if( weight < 0 ){//node's left child is right heavy
-                    return rightRotate(node);
+                if( weight >= 1 || weight === 0 ){//node's right child is left heavy or balanced
+                     node.right = rightRotate( node.right );
+                    return leftRotate( node  );
+                }else if( weight < 0 ){//node's right child is right heavy
+                    return leftRotate(node);
                 }
             }
         }
-        return node;
+        return null;
     };
 
     function nodeHeight( node ){
@@ -110,6 +114,7 @@ var  AVLTree = function(){
         nodeX.right = nodeY.left;
         nodeY.left = nodeX;
         nodeX.height--;
+        nodeY.height = nodeHeight(nodeY);
         return nodeY;
     };
     // You do a right rotate when the node is 'heavy' on the left
@@ -127,8 +132,31 @@ var  AVLTree = function(){
         nodeX.left = nodeY.right;
         nodeY.right = nodeX;
         nodeX.height--;
+        nodeY.height = nodeHeight(nodeY);
         return nodeY;
     }
+
+    function minSort( node, buffer ){
+        if( node.left !== null ){
+            minSort( node.left, buffer );
+        }
+        buffer.push( node.value );
+        if( node.right !== null ){
+            minSort( node.right, buffer)
+        }
+        return buffer;
+    };
+
+    function maxSort( node, buffer ){
+        if( node.right !== null ){
+            maxSort( node.right, buffer)
+        }
+        buffer.push( node.value );
+        if( node.left !== null ){
+            maxSort( node.left, buffer );
+        }
+        return buffer;
+    };
 
     // [35,98,9,54,8,22,67,52,97,20]
     //            35 
@@ -140,20 +168,29 @@ var  AVLTree = function(){
     function randRange( min, max ){
         return ~~(Math.random()*max + min);
     };
+    function randFill( array, min, max ){
+        min = min || 0;
+        max = max || array.length;
+        for( var i=0,l=array.length; i<l; array[i++] = randRange(min,max) );
+    };
     
     var unitTest = {
         testAVLInsert:function( array ){
             var root = new Node(array[0]);
-            for( var i=1,l=array.length; i<l; i++ ){
-                insert( root, array[i] );
+            for( var i=1,t,l=array.length; i<l; i++ ){
+                t = insert( root, array[i] );
+                if( t ) root = t;
             }
             return root;
-        }
+        },
+        randFill:randFill
     }
     return {
         Node:Node,
         insert:insert,
         randRange:randRange,
+        minSort:minSort,
+        maxSort:maxSort,
         unitTest:unitTest
     };
 }();
