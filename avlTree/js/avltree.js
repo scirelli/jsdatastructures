@@ -65,10 +65,10 @@ var  AVLTree = function(){
     };
     function balance( node ){
         var weight = 0;
-        weight = nodeWieght(node);
+        weight = nodeWeight(node);
         if( Math.abs(weight) > 1 ){//unblanced
             if( weight > 1 ){//node is left heavy
-                weight = nodeWieght(node.left);
+                weight = nodeWeight(node.left);
                 if( weight >= 1 || weight === 0 ){//node's left child is left heavy or balanced
                     return rightRotate(node);
                 }else if( weight < 0 ){//node's left child is right heavy
@@ -76,7 +76,7 @@ var  AVLTree = function(){
                     return rightRotate( node  );
                 }
             }else if( weight < 0 ){//node is right heavy
-                weight = nodeWieght(node.right);
+                weight = nodeWeight(node.right);
                 if( weight >= 1 || weight === 0 ){//node's right child is left heavy or balanced
                      node.right = rightRotate( node.right );
                     return leftRotate( node  );
@@ -94,10 +94,10 @@ var  AVLTree = function(){
         return Math.max( leftH, rightH ) + 1;
     };
 
-    function nodeWieght( node ){
+    function nodeWeight( node ){
         var leftH  = node.left  ? node.left.height  : -1,
             rightH = node.right ? node.right.height : -1;
-        return leftH - rightH;
+        return Math.abs(leftH - rightH);
     }
     // You do a left rotate when the node is 'heavy' on the right
     //
