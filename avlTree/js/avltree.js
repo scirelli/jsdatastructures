@@ -119,9 +119,9 @@ var  AVLTree = function(){
     };
     // You do a right rotate when the node is 'heavy' on the left
     //
-    //         (x)          Right rotate x       (x)         
+    //         (x)          Right rotate x       (y)         
     //        /    \                            /   \        
-    //      (y)     /C\                      /A\     (y)        
+    //      (y)     /C\                      /A\     (x)        
     //     /   \                                    /    \   
     //    /A\  /B\                                /B\    /C\ 
     //      AyBxC                =          AyBxC
