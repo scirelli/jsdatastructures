@@ -97,7 +97,7 @@ var  AVLTree = function(){
     function nodeWeight( node ){
         var leftH  = node.left  ? node.left.height  : -1,
             rightH = node.right ? node.right.height : -1;
-        return Math.abs(leftH - rightH);
+        return leftH - rightH;
     }
     // You do a left rotate when the node is 'heavy' on the right
     //
