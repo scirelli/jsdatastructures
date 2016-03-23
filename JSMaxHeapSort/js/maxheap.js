@@ -82,16 +82,16 @@ var MaxHeap = function(){
     function randFill( array ){
         for( var i=0,l=array.length; i<l; array[i++] = randRange(0,l) );
     };
-    
+
     function test( array ){
         var a = [6,7,0,4,0,8,18,9,1,3];
-
-        for(var i=0, l=a.length; i<l; i++ ){
-            console.log("Original array: " + array);
-            buildMaxHeap( a );
-            console.log("Sorted array: " + array);
+        console.log("Original array: " + a);
+        buildMaxHeap( a );
+        for(var i=0, l=a.length; i<l; i++ ){         
+            console.log("Sorted array: " + a);
             console.log('Max: ' + a[0] + '\n');
             a[0] = a.pop();
+            maxHeapify(a,0);
         }
     }
 
