@@ -1,23 +1,37 @@
-//Heap sort
-// Heap represented in an array
-// root of tree is first element in the array (i=0)
-//parent(i) = floor( (i-1)/2 )
-//left(i) = 2i + 1
-//right(i) = 2i + 2
-//  0   1  2  3  4  5  6  7  8
-//[ 15, 3, 7, 1, 7, 0, 8, 5, 44 ]
-//
-//                          ( )0
-//                    ( )1        ( )2
-//               ( )3     ( )4 ( )5   ( )6
-//           ( )7   ( )8
-//
-// Max Heap
-// The key of a node is >= the keys of it's children.
-//
-// Min Heap
-// The key of a node is <= the keys of it's children.
-//
+/**Heap sort
+* Heap represented in an array
+* root of tree is first element in the array (i=0)
+* parent(i) = floor( i/2 )
+* left(i) = 2i+1
+* right(i) = 2i + 2
+*  0   1  2  3  4  5  6  7  8
+* [ 15, 3, 7, 1, 7, 0, 8, 5, 44 ]
+*
+*                          ( )0
+*                    ( )1        ( )2
+*               ( )3     ( )4 ( )5   ( )6
+*           ( )7   ( )8
+*
+* Max Heap
+* The key of a node is >= the keys of it's children.
+*
+* Min Heap
+* The key of a node is <= the keys of it's children.
+*
+*
+* A binary heap is a heap data structure created using a binary tree.
+*
+* binary tree has two rules -
+* 1. Binary Heap has to be complete binary tree at all levels except the last level. This is called shape property.
+* 2. All nodes are either greater than equal to (Max-Heap) or less than equal to (Min-Heap) to each of its child nodes. This is called heap prop­erty.
+* Implementation:
+*   Use array to store the data.
+*   Start storing from index 1, not 0.
+*   For any given node at position i:
+*       Its Left Child is at [2*i+1] if available.
+*       Its Right Child is at [2*i+2] if available.
+*       Its Parent Node is at [floor((i-1)/2)]if available.
+*/
 
 var MaxHeap = function(){
     function right( i ){
@@ -40,24 +54,24 @@ var MaxHeap = function(){
     function maxHeapify( a, i ){//O(log(n))
         var lft  = left(i),
             rght = right(i),
-            tmp   = 0;
-        if( lft >= a.length || lft < 0 ) return;
-        if( rght >= a.length || rght < 0 ) return;
-
-        if( a[lft] > a[i] ){
-            swap(a, lft, i);
-            maxHeapify( a, lft );
+            largest = i;
+ 
+        if( lft < a.length && a[lft] > a[largest] ){
+            largest = lft;
         }
-        if( a[rght] > a[i] ){
-            swap( a, rght, i );
-            maxHeapify( a, rght );
-        }       
+        if( rght < a.length && a[rght] > a[largest] ){
+            largest = rght;
+        }
+        if( largest != i ){
+            swap(a, i, largest );
+            maxHeapify( a, largest );
+        }
     };
     
     //Convert A[1...n] into a max-heap.
     // A[n/2 +1 ... n] are all leaves
     function buildMaxHeap( array ){
-        for( var i=(array.length/2)-1; i>=0; i-- ){
+        for( var i=Math.floor((array.length-1)/2); i>=0; i-- ){
             maxHeapify(array, i);
         }
     };
@@ -68,15 +82,17 @@ var MaxHeap = function(){
     function randFill( array ){
         for( var i=0,l=array.length; i<l; array[i++] = randRange(0,l) );
     };
-    function test(){
-        var array = new Array(100),
-            mh    = new MaxHeap();
-        
-        randFill(array);
+    
+    function test( array ){
+        var a = [6,7,0,4,0,8,18,9,1,3];
 
-        console.log("Original array: " + array);
-        mh.buildMaxHeap( array );
-        console.log("Sorted array: " + array);
+        for(var i=0, l=a.length; i<l; i++ ){
+            console.log("Original array: " + array);
+            buildMaxHeap( a );
+            console.log("Sorted array: " + array);
+            console.log('Max: ' + a[0] + '\n');
+            a[0] = a.pop();
+        }
     }
 
     return {
@@ -90,3 +106,4 @@ var MaxHeap = function(){
         }
     }
 }();
+MaxHeap.test.unitTest();
