@@ -4,12 +4,17 @@ module.exports = class Grid{
     static START = 2;
     static GOAL = 3;
 
-    constructor(width, height) {
+    constructor(width, height, fillType=Grid.EMPTY) {
         this.width = Number(width);
         this.height = Number(height);
-        this.grid = (new Array(this.width*this.height)).fill(Grid.EMPTY);
+        this.grid = (new Array(this.width*this.height)).fill(fillType);
         this.start = {x: 0, y: 0};
         this.goal = {x: 0, y: 0};
+    }
+
+    isValidCell(cell) {
+        if(cell.x >= 0 && cell.x < this.width && cell.y >= 0 && cell.y < this.height) return true;
+        return false;
     }
 
     get(loc) {
@@ -21,6 +26,7 @@ module.exports = class Grid{
     }
 
     isWall(loc) {
+        if(!this.isValidCell(loc)) return true;
         return this.isType(loc, Grid.WALL);
     }
 
@@ -42,23 +48,35 @@ module.exports = class Grid{
 
     setLocationType(loc, type) {
         this.grid[this.pointToPos(loc)] = type;
+
+        return this;
+    }
+
+    addType(list, type) {
+        for(let loc of list) {
+            this.setLocationType(loc, type);
+        }
+
+        return this;
     }
 
     addWalls(listOfWalls) {
-        for(let wall of listOfWalls) {
-            this.setLocationType(wall, Grid.WALL);
-        }
+        return this.addType(listOfWalls, Grid.WALL);
     }
 
     addGoal(loc) {
         this.goal.x = loc.x;
         this.goal.y = loc.y;
         this.setLocationType(loc, Grid.GOAL);
+
+        return this;
     }
 
     addStart(loc) {
         this.start.x = loc.x;
         this.start.y = loc.y;
         this.setLocationType(loc, Grid.START);
+
+        return this;
     }
 };
