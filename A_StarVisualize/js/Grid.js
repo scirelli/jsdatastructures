@@ -13,6 +13,14 @@
             this.goal = {x: 0, y: 0};
         }
 
+        getWidth() {
+            return this.width;
+        }
+
+        getHeight() {
+            return this.height;
+        }
+
         isValidCell(cell) {
             if(cell.x >= 0 && cell.x < this.width && cell.y >= 0 && cell.y < this.height) return true;
             return false;
@@ -48,14 +56,15 @@
         }
 
         setLocationType(loc, type) {
-            this.grid[this.pointToPos(loc)] = type;
+            if(!this.isValidCell(loc)) throw new Error('Out of bounds.');
+            this.grid[this.pointToPos(loc)] = parseInt(type);
 
             return this;
         }
 
         addType(list, type) {
             for(let loc of list) {
-                this.setLocationType(loc, type);
+                this.setLocationType({x: parseInt(loc.x), y: parseInt(loc.y)}, type);
             }
 
             return this;
@@ -66,17 +75,17 @@
         }
 
         addGoal(loc) {
-            this.goal.x = loc.x;
-            this.goal.y = loc.y;
-            this.setLocationType(loc, Grid.GOAL);
+            this.goal.x = parseInt(loc.x);
+            this.goal.y = parseInt(loc.y);
+            this.setLocationType(this.goal, Grid.GOAL);
 
             return this;
         }
 
         addStart(loc) {
-            this.start.x = loc.x;
-            this.start.y = loc.y;
-            this.setLocationType(loc, Grid.START);
+            this.start.x = parseInt(loc.x);
+            this.start.y = parseInt(loc.y);
+            this.setLocationType(this.start, Grid.START);
 
             return this;
         }

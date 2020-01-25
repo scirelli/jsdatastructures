@@ -120,8 +120,13 @@
             return this;
         }
 
+        getGrid() {
+            return this.grid;
+        }
+
         tick() {
-            return this.stepFnc.call(this);
+            let next = this.stepFnc.call(this);
+            return next !== FAILURE && next !== COMPLETE;
         }
     }
 

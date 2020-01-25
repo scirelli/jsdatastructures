@@ -42,7 +42,7 @@
         blinkingRooms = [],
         controlRooms = [];
 
-    oReq.addEventListener('load', function reqListener(e) {
+    oReq.addEventListener('load', function reqListener(e){
         let boardObj = parseStringBoard(this.response.toString());
 
         const grid = new A_Star.Grid(boardObj.width, boardObj.height)
@@ -54,17 +54,11 @@
         pathFinder.on(A_Star.WALK_COMPLETE, (path)=> {
             console.log(path.join(', '));
         });
-        pathFinder.on(A_Star.BUILDER_START_NOT_FOUND, (e)=> {
-            console.log('aaaahhh');
-        });
-        pathFinder.on(A_Star.BUILDER_CUR_CELL, (c)=> {
-            console.log(c);
-        });
 
-        while(pathFinder.tick());
+        //while(pathFinder.tick());
 
     });
-    oReq.open('GET', 'input.txt');
+    oReq.open("GET", 'input.txt');
     oReq.send();
 
 
@@ -104,46 +98,28 @@
     }
 
     function parseStringBoard(boardStr) {
-        const WALL = '#',
-            SPACE = '.',
-            START = '0',
-            GOAL = '7';
-
         let board = boardStr.split('\n'),
             boardObj = {
-                width:       board[0].length,
-                height:      board.length,
+                width: 0,
+                height: 0,
                 listOfWalls: [],
-                start:       {x: 0, y: 0},
-                end:         {x: 9, y: 9}
+                start : {x: 0, y: 0},
+                end : {x: 9, y: 9}
             };
-
-        for(let y in board) {
-            for(let x in board[y]) {
-                let c = board[y][x];
-                if(c === WALL) {
-                    boardObj.listOfWalls.push({x:x, y:y});
-                }else if(c === START) {
-                    boardObj.start = {x:x, y:y};
-                }else if(c === GOAL) {
-                    boardObj.end = {x:x, y:y};
-                }
-            }
-        }
 
         return boardObj;
     }
 
     Math.randRange = function(min, max) {
         return Math.floor(Math.random() * ((max - min) + 1) + min);
-    };
+    }
 
     function shadeGenerator() {
         var shade = 0;
-
+        
         return function() {
-            var color = shade++ % 136 + 64;
-            return 'rgb('+ color + ',' + color + ',' + color + ')';
-        };
+            var color = shade++ % 136 + 64; 
+             return 'rgb('+ color + ',' + color + ',' + color + ')';               
+        }
     }
 })();
