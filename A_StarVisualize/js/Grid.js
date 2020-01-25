@@ -13,6 +13,14 @@
             this.goal = {x: 0, y: 0};
         }
 
+        getStart() {
+            return this.start;
+        }
+
+        getGoal() {
+            return this.goal;
+        }
+
         getWidth() {
             return this.width;
         }
