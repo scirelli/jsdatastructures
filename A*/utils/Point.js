@@ -12,10 +12,10 @@ module.exports = class Point{
     }
 
     set x(x) {
-        this._x = x;
+        this._x = parseInt(x);
     }
     set y(y) {
-        this._y = y;
+        this._y = parseInt(y);
     }
 
     equal(p) {
