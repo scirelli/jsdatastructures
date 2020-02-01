@@ -124,7 +124,7 @@ module.exports = function Heap() {
     }
 
     function buildHeap(array, comparator) {
-        for( var i=(~~(array.length/2))-1; i>=0; i-- ) {
+        for( var i=(~~(array.length>>1))-1; i>=0; i-- ) {
             heapify(array, i, comparator);
         }
 
