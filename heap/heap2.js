@@ -60,11 +60,9 @@ module.exports = class Heap{
         return this;
     }
 
-    push() {
-        for(let item of arguments) {
-            this.array.push(item);
-            siftDown.call(0, this.array.length - 1);
-        }
+    push(item) {
+        this.array.push(item);
+        siftDown(this.array, 0, this.array.length - 1);
 
         return this;
     }
@@ -85,7 +83,7 @@ module.exports = class Heap{
         return elem;
     }
 
-    static heapify(array, cmp=(a,b)=>a-b) {
+    static heapify(array, cmp=(a, b)=>a-b) {
         for(let i=Math.floor(array.length/2); i>=0; i--) {
             siftUp(array, i, cmp);
         }
@@ -95,16 +93,24 @@ module.exports = class Heap{
 };
 
 function siftUp(array, elemIndex, cmp) {
+    return [array, elemIndex, cmp];
 }
 
 function siftDown(array, startIndex, endIndex, cmp) {
-    let item = array[startIndex],
+    let newItem = array[endIndex],
         parentIndex;
 
-    while(startIndex > endIndex) {
-        parentIndex = getParentNodeIndex(startIndex);
-        //if(cmp(array[parentIndex] 
+    while(endIndex > startIndex) {
+        parentIndex = getParentNodeIndex(endIndex);
+        if(cmp(newItem, array[parentIndex]) < 0) {
+            swap(array, parentIndex, endIndex);
+            endIndex = parentIndex;
+            continue;
+        }
+        break;
     }
+    array[endIndex] = newItem;
+    return array;
 }
 
 function getRightNodeIndex(i) {
@@ -118,12 +124,12 @@ function getParentNodeIndex(i) {
     return (i-1)>>1;
 }
 
-function swap(a, b) {
+function swap(array, a, b) {
     let tmp = 0;
 
-    tmp = this.array[a];
-    this.array[a] = this.array[b];
-    this.array[b] = tmp;
+    tmp = array[a];
+    array[a] = array[b];
+    array[b] = tmp;
 
-    return this;
+    return array;
 }
