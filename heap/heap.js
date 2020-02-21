@@ -158,11 +158,11 @@ module.exports = function Heap() {
         let cmp = (a, b)=>b-a;
         maxA = buildHeap(array.slice(0), cmp);
         console.log('Max sorted array: ' + maxA);
-        let v = pop(maxA, cmp)
+        let v = pop(maxA, cmp);
         while(v) {
             heapify(maxA, 0, cmp);
             console.log('Max sorted array: ' + maxA);
-            v = pop(maxA, cmp)
+            v = pop(maxA, cmp);
         }
     }
 

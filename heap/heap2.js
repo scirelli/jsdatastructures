@@ -19,8 +19,12 @@
 // The key of a node is <= the keys of it's children.
 //
 module.exports = class Heap{
-    constructor() {
+    constructor(a) {
         this.array = [];
+
+        if(Array.isArray(a) && a.length) {
+            this.array = Heap.heapify(a);
+        }
     }
 
     compare(a, b) {
@@ -62,7 +66,7 @@ module.exports = class Heap{
 
     push(item) {
         this.array.push(item);
-        siftDown(this.array, 0, this.array.length - 1);
+        siftDown(this.array, 0, this.array.length - 1, this.compare);
 
         return this;
     }
@@ -72,12 +76,35 @@ module.exports = class Heap{
     insert() {
         return this.push.apply(arguments);
     }
+    add() {
+        return this.push.apply(arguments);
+    }
 
     pop() {
+        let lastItem = this.array.pop(),
+            returnItem;
+
+        if(this.array.length) {
+            returnItem = this.array[0];
+            this.array[0] = lastItem;
+            siftUp(this.array, 0, this.compare);
+        }else{
+            returnItem = lastItem;
+        }
+
+        return returnItem;
     }
     shift() {
         return this.pop();
     }
+    next() {
+        if(!this.isEmpty()) {
+            return {value: this.pop(), done: false};
+        }
+
+        return {done: true};
+    }
+    [Symbol.iterator]() { return this; }
 
     popPush(elem) {
         return elem;
@@ -92,8 +119,24 @@ module.exports = class Heap{
     }
 };
 
-function siftUp(array, elemIndex, cmp) {
-    return [array, elemIndex, cmp];
+function siftUp(array, rootIndex, cmp) {
+    let endPos = array.length,
+        startPos = rootIndex,
+        newItem = array[rootIndex],
+        leftChild = getLeftNodeIndex(rootIndex),
+        rightChild;
+
+    while(leftChild < endPos) {
+        rightChild = leftChild + 1;
+        if(rightChild < endPos && cmp(array[leftChild], array[rightChild]) > 0) {
+            leftChild = rightChild;
+        }
+        array[rootIndex] = array[leftChild];
+        rootIndex = leftChild;
+        leftChild = getLeftNodeIndex(rootIndex);
+    }
+    array[rootIndex] = newItem;
+    siftDown(array, startPos, rootIndex, cmp);
 }
 
 function siftDown(array, startIndex, endIndex, cmp) {
@@ -113,7 +156,7 @@ function siftDown(array, startIndex, endIndex, cmp) {
     return array;
 }
 
-function getRightNodeIndex(i) {
+function getRightNodeIndex(i) { // eslint-disable-line no-unused-vars
     return (i<<1)+2;
 }
 function getLeftNodeIndex(i) {

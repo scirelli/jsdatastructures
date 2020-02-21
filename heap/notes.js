@@ -21,7 +21,7 @@ Mid: 4
 
 /*
 Insert: 5
-                    (5)0 startIndex; endIndex
+    parentIndex --> (5)0 startIndex; endIndex
 -------------------------
 Insert: 6
     parentIndex --> (5)0 <-- startIndex
@@ -63,7 +63,7 @@ Insert: 9
     startIndex     = 0
     endIndex       = 3
     parentIndex(3) = (3-1)/2 = 1
-    9 - 5 = 4
+    9 - 6 = 3
 
                     (5)0 <----- startIndex
                    /   \
@@ -116,4 +116,75 @@ Insert: 4
                 /  \
                /    \
              (9)3   (6)4
+*/
+/*
+                          (4)0
+                         /    \
+                        /      \
+                       /        \
+                      /          \
+                     /            \
+                   (5)1           (7)2
+                  /   \
+                 /     \
+                /       \
+               (9)3     (6)4
+*/
+/*
+
+pop():
+
+Result: 4
+                    ( )0
+                   /   \
+                  /     \
+                (5)1    (7)2
+                /  \
+               /    \
+             (9)3   (6)4
+
+---- a[0] = a.pop()
+                    (6)0
+                   /   \
+                  /     \
+                (5)1    (7)2
+                /
+               /
+             (9)3
+---- sinkDown
+rootIndex: 0
+endPos: 4
+startPos: 0
+newItem: 6
+leftChild: 1
+                    (6)0 <----- rootIndex
+                   /   \
+                  /     \
+  leftChild --> (5)1    (7)2 <- rightChild
+                /
+               /
+             (9)3 <------------ endPos
+
+                    (5)0
+                   /   \
+                  /     \
+   rootIndex -> (5)1    (7)2
+                /
+               /
+             (9)3 <- leftChild
+rootIndex: 1
+endPos: 4
+startPos: 0
+newItem: 6
+leftChild: 3
+rightChild: 4
+
+                    (5)0
+                   /   \
+                  /     \
+                (6)1    (7)2
+                /
+               /
+             (9)3
+-------------------------
 */
