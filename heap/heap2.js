@@ -18,7 +18,7 @@
 // Min Heap
 // The key of a node is <= the keys of it's children.
 //
-module.exports = class Heap{
+class Heap{
     constructor(a) {
         this.array = [];
 
@@ -117,28 +117,30 @@ module.exports = class Heap{
 
         return array;
     }
-};
+}
 
+//Sift up or move the hole, or out of place value, to the bottom of the tree
 function siftUp(array, rootIndex, cmp) {
     let endPos = array.length,
         startPos = rootIndex,
         newItem = array[rootIndex],
-        leftChild = getLeftNodeIndex(rootIndex),
+        childIndex = getLeftNodeIndex(rootIndex),
         rightChild;
 
-    while(leftChild < endPos) {
-        rightChild = leftChild + 1;
-        if(rightChild < endPos && cmp(array[leftChild], array[rightChild]) > 0) {
-            leftChild = rightChild;
+    while(childIndex < endPos) {
+        rightChild = childIndex + 1;
+        if(rightChild < endPos && cmp(array[childIndex], array[rightChild]) > 0) {
+            childIndex = rightChild;
         }
-        array[rootIndex] = array[leftChild];
-        rootIndex = leftChild;
-        leftChild = getLeftNodeIndex(rootIndex);
+        array[rootIndex] = array[childIndex];
+        rootIndex = childIndex;
+        childIndex = getLeftNodeIndex(rootIndex);
     }
     array[rootIndex] = newItem;
     siftDown(array, startPos, rootIndex, cmp);
 }
 
+//Sift down or move a value to where it belongs in the tree.
 function siftDown(array, startIndex, endIndex, cmp) {
     let newItem = array[endIndex],
         parentIndex;
@@ -175,4 +177,10 @@ function swap(array, a, b) {
     array[b] = tmp;
 
     return array;
+}
+
+if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = Heap;
+}else {
+    window.Heap = Heap; //eslint-disable-line no-undef
 }
